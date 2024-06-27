@@ -131,6 +131,84 @@ app.post("/usuarios/:id/novoCartao", async (req, res) => {
   res.redirect(`/usuarios/${id}/cartoes`);
 });
 
+// Rotas para jogos
+app.get("/usuarios/:id/jogos", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+
+  const jogos = await Jogo.findAll({
+    raw: true,
+    include: {
+      model: Usuario,
+      through: { attributes: [] },
+      where: { id: id }
+    },
+  });
+
+  res.render("jogos.handlebars", { usuario, jogos });
+});
+
+app.get("/usuarios/:id/novoJogo", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+
+  res.render("formJogo", { usuario });
+});
+
+app.post("/usuarios/:id/novoJogo", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const dadosJogo = {
+    nome: req.body.nome,
+    descricao: req.body.descricao,
+    preco: req.body.preco,
+  };
+
+  const jogo = await Jogo.create(dadosJogo);
+
+  await jogo.addUsuario(id);
+  res.redirect(`/usuarios/${id}/jogos`);
+});
+
+// Rotas para conquistas
+app.get("/usuarios/:id/conquistas", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+
+  const conquistas = await Conquista.findAll({
+    raw: true,
+    include: {
+      model: Usuario,
+      through: { attributes: [] },
+      where: { id: id }
+    },
+  });
+
+  res.render("conquistas.handlebars", { usuario, conquistas });
+});
+
+app.get("/usuarios/:id/novaConquista", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+
+  res.render("formConquista", { usuario });
+});
+
+app.post("/usuarios/:id/novaConquista", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const dadosConquista = {
+    nome: req.body.nome,
+    descricao: req.body.descricao,
+  };
+
+  const conquista = await Conquista.create(dadosConquista);
+
+  await conquista.addUsuario(id);
+  res.redirect(`/usuarios/${id}/conquistas`);
+});
+
+
 app.listen(8000, () => {
   console.log("Server rodando!");
 });
