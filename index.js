@@ -6,6 +6,7 @@ const exphbs = require("express-handlebars");
 
 const Usuario = require("./models/Usuario");
 const Cartao = require("./models/Cartao");
+const Conquista = require("./models/Conquistas");
 const Jogo = require("./models/Jogo");
 
 Jogo.belongsToMany(Usuario, { through: "aquisicoes" });
@@ -18,8 +19,7 @@ const app = express();
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
 
-// Configurações no express para facilitar a captura
-// de dados recebidos de formulários
+
 app.use(
   express.urlencoded({
     extended: true,

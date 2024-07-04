@@ -1,0 +1,17 @@
+<h1>Jogos do usuário {{usuario.nome}}</h1>
+<a href="/usuarios/{{usuario.id}}/novoJogo">Cadastrar novo jogo!</a>
+
+<table border="1">
+  <tr>
+    <th>Título</th>
+    <th>Descrição</th>
+    <th>Preço</th>
+  </tr>
+  {{#each jogos}}
+    <tr>
+      <td>{{this.titulo}}</td>
+      <td>{{this.descricao}}</td>
+      <td>{{this.preco}}</td>
+    </tr>
+  {{/each}}
+</table>
